@@ -26,8 +26,7 @@
 	"libmarkdown.so"
 ))
 
-(setq libmarkdown "libmarkdown.dylib")
-(set 'library (files (or
+(setq libmarkdown (files (or
 	(find true (map file? files))
 	(throw-error "cannot find libmarkdown library"))))
 
@@ -179,19 +178,19 @@
 		(fclose ifp)
 		(fclose ofp) nil))
 
-;; @syntax (nl-discount:compile-markdown-file <input-string> <output-file> [<flags>])
+;; @syntax (nl-discount:compile-markdown-string <input-string> <output-file> [<flags>])
 ;; @param <input-string> The string containing markdown you would like compiled to html
 ;; @param <output-file> The resulting file after compilation
 ;; @param <flags> - optional; flags for modifying the output
 ;; @return Returns nil
 ;;
-;; The function 'compile-markdown-file' uses libc's fopen/fclose calls
+;; The function 'compile-markdown-string' uses libc's fopen/fclose calls
 ;; in conjunction with mkd_string / markdown / mkd_cleanup to compile
 ;; a string containing markdown into a html output. (abstracting away
 ;; from directly dealing with the C library)
 ;;
 ;; @example
-;; (nl-discount:compile-markdown-file "*oh hai*" "out.html" (| TOC NOSTRIKETHROUGH))
+;; (nl-discount:compile-markdown-string "*oh hai*" "out.html" (| TOC NOSTRIKETHROUGH))
 ;; => nil
 ;;
 (define (compile-markdown-string input-string output-file (flags 0))
