@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "HTML 4.01 Transitional">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>nl-discount.lsp</title>
+
+<link rel="stylesheet" type="text/css" href="newlispdoc.css" />
+</head>
+
+<body style="margin: 20px;" text="#111111" bgcolor="#FFFFFF" 
+			link="#376590" vlink="#551A8B" alink="#ffAA28">
+<blockquote>
+<center><h1>nl-discount.lsp</h1></center>
+<p><a href="index.html">Module index</a></p><a href="nl-discount.lsp.src.html">source</a>&nbsp;<br/>
+<h2>Module:&nbsp;nl-discount</h2><b>index: </b>http://github.com/aktowns/nl-discount<br/>
+<p>libmarkdown(discount) wrapper for new lisp. abstracting from ffi</p>
+<b>Location: </b><a href="http://www.pell.portland.or.us/~orc/Code/discount/">http://www.pell.portland.or.us/~orc/Code/discount/</a><br/>
+<b>Version: </b>0.01 - intial version working basic wrapper<br/>
+<b>Version: </b>0.02 - documentation improvement, general code cleanup<br/>
+<b>Author: </b>Ashley Towns <ashleyis@me.com><br/>
+<br/><br/>
+ this wrapper requires libmarkdown from <tt>http://www.pell.portland.or.us/~orc/Code/discount/</tt>
+ you may need to compile it as a shared lib (-shared in the makefile)
+<br/><br/>
+ this is my first lisp script, it probably contains alot
+ of bugs / bad coding practice. Give me a shout if you see
+ anything out of place
+
+
+
+
+
+
+
+
+
+
+
+ Fine-grained access to the internals
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ extra imports needed for dealing with files
+
+<br/><br/><center>&sect;</center><br/>
+<a name="nl-discount_compile-markdown"></a><h3><font color=#CC0000>nl-discount:compile-markdown</font></h3>
+<b>syntax: (<font color=#CC0000>nl-discount:compile-markdown</font> <em>input-file</em> <em>output-file</em> [<em>flags</em>])</b><br/>
+<b>parameter: </b><em>input-file</em> - The markdown file you would like compiled to html<br/>
+<b>parameter: </b><em>output-file</em> - The resulting file after compilation<br/>
+<b>parameter: </b><em>flags</em> - - optional; flags for modifying the output<br/>
+<p><b>return: </b>Returns nil</p>
+<br/><br/>
+ The function <tt>compile-markdown</tt> uses libc's fopen/fclose calls
+ in conjunction with mkd_in / markdown / mkd_cleanup to compile
+ a file into a html output. (abstracting away from directly dealing
+ with the C library)
+<br/><br/>
+<b>example:</b><blockquote><pre> (nl-discount:compile-markdown "test.md" "out.html" (| TOC NOSTRIKETHROUGH))
+ =&gt; nil
+</pre></blockquote>
+<br/><br/><center>&sect;</center><br/>
+<a name="nl-discount_compile-markdown-file"></a><h3><font color=#CC0000>nl-discount:compile-markdown-file</font></h3>
+<b>syntax: (<font color=#CC0000>nl-discount:compile-markdown-file</font> <em>input-string</em> <em>output-file</em> [<em>flags</em>])</b><br/>
+<b>parameter: </b><em>input-string</em> - The string containing markdown you would like compiled to html<br/>
+<b>parameter: </b><em>output-file</em> - The resulting file after compilation<br/>
+<b>parameter: </b><em>flags</em> - - optional; flags for modifying the output<br/>
+<p><b>return: </b>Returns nil</p>
+<br/><br/>
+ The function <tt>compile-markdown-file</tt> uses libc's fopen/fclose calls
+ in conjunction with mkd_string / markdown / mkd_cleanup to compile
+ a string containing markdown into a html output. (abstracting away
+ from directly dealing with the C library)
+<br/><br/>
+<b>example:</b><blockquote><pre> (nl-discount:compile-markdown-file "*oh hai*" "out.html" (| TOC NOSTRIKETHROUGH))
+ =&gt; nil
+</pre></blockquote>
+<br/><br/><center>&sect;</center><br/>
+<a name="nl-discount_markdown-string"></a><h3><font color=#CC0000>nl-discount:markdown-string</font></h3>
+<b>syntax: (<font color=#CC0000>nl-discount:markdown-string</font> <em>input-string</em> [<em>flags</em>])</b><br/>
+<b>parameter: </b><em>input-string</em> - The string containing markdown you would like markdown'd<br/>
+<b>parameter: </b><em>flags</em> - - optional; flags for modifying the output<br/>
+<p><b>return: </b>Returns nil</p>
+<br/><br/>
+ The function <tt>markdown-string</tt> compiles a string of markdown valid
+ syntax and returns it as a string
+<br/><br/>
+<b>example:</b><blockquote><pre> (nl-discount:markdown-string "*oh hai*" (| TOC NOSTRIKETHROUGH))
+ =&gt; "&lt;p&gt;&lt;em&gt;Oh hai&lt;/em&gt;&lt;/p&gt;"
+</pre></blockquote>
+
+<br/><br/><center>- &part; -</center><br/>
+<center><font face='Arial' size='-2' color='#444444'>
+generated with <a href="http://newlisp.org">newLISP</a>&nbsp;
+and <a href="http://newlisp.org/newLISPdoc.html">newLISPdoc</a>
+</font></center>
+</blockquote>
+</body>
+</html>
