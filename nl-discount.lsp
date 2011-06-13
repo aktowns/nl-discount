@@ -31,7 +31,7 @@
 	(find true (map file? files))
 	(throw-error "cannot find libmarkdown library"))))
 
-;; input functions
+; input functions
 
 ; MMIOT *mkd_in(FILE *f, int flags)
 ; reads a markdown input file and returns a MMIOT containing the preprocessed document. (which is then fed to markdown() for final formatting.)
@@ -41,7 +41,7 @@
 ; reads the markdown input file that’s been written into bfr and returns a preprocessed blob suitable for feedin to markdown().
 (import libmarkdown "mkd_string")
 
-;; "Big Picture" - style processing functions
+; "Big Picture" - style processing functions
 
 ; int markdown(MMIOT *doc, FILE *out, int flags)
 ; formats a document (created with mkd_in() or mkd_string()) and writes the resulting HTML document to out.
@@ -93,7 +93,7 @@
 ; releases the MMIOT allocated for the document.
 (import libmarkdown "mkd_cleanup")
 
-;; Document header access functions
+; Document header access functions
 
 ; char *mkd_doc_title(MMIOT *doc)
 ; returns the % title line.
@@ -107,7 +107,7 @@
 ; returns the % date line.
 (import libmarkdown "mkd_doc_date")
 
-;; URL callback functions
+; URL callback functions
 
 ; void mkd_e_url(MMIOT*, char* (callback)(char*,int,void*))
 ; sets up a callback function that is called whenever discount processes a []() or <link> construct. The callback function is passed a pointer to the url, the size of the url, and a data pointer (null or supplied by mkd_e_data())
