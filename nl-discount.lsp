@@ -2,46 +2,34 @@
 ;; @index http://github.com/aktowns/nl-discount
 ;; @description libmarkdown(discount) wrapper for new lisp. abstracting from ffi
 ;; @location http://www.pell.portland.or.us/~orc/Code/discount/
-;; @version 0.01
+;; @version 0.01 - intial version working basic wrapper
+;; @version 0.02 - documentation improvement, general code cleanup
 ;; @author Ashley Towns <ashleyis@me.com>
+;;
+;; this wrapper requires libmarkdown from 'http://www.pell.portland.or.us/~orc/Code/discount/'
+;; you may need to compile it as a shared lib (-shared in the makefile)
 ;;
 ;; this is my first lisp script, it probably contains alot
 ;; of bugs / bad coding practice. Give me a shout if you see
 ;; anything out of place
 
-(context 'utils)
-;; @syntax (utils:address-address <pointer> [<big-endian>])
-;; @param <pointer> The pointer you would like the pointer address of
-;; @param <big-endian> - optional; for big-endian mode (don't reverse arrays)
-;; @return Returns the pointer's pointer address
-;;
-;; The function 'address-address' retrieves the value of the pointers
-;; pointer address, for usage in ffi..
-;;
-;; Is there an easier way to accomplish this?
-;; getting the address of the pointer for pass by value
-;; params (char ** etc)?
-;;
-;; @example
-;; (set 'a-ptr (dup "\000" 30))
-;; (c-method-that-changes pointers-location a-ptr)
-;; (get-string (address-address a-ptr))
-;; => content!
-;;
-(define (address-address ptr-find (big-endian nil))
-	(letn
-		((endian (if big-endian (lambda (x) x) reverse))
-			(left (endian (unpack "bbbb" (+ (address ptr-find) 4)))) ; little endian
-			(right (endian (unpack "bbbb" (address ptr-find))))
-			(addr (join (map (fn (z) (format "%02x" z)) (flat (list left right))))))
-
-		(eval-string (join (list "0x" addr)))))
-
-
+(load "utils.lsp")
 
 (context 'nl-discount)
 
+(set 'files '(
+	"/usr/lib/libmarkdown.so" ; Linux Fedora
+	"/usr/local/lib/libmarkdown.so" ; Linux, UNIX
+	"/usr/local/lib/libmarkdown.dylib" ; MacOS X (homebrew etc)
+	"/usr/lib/libmarkdown.dylib" ; MacOS X (other)
+	"libmarkdown.dylib"
+	"libmarkdown.so"
+))
+
 (setq libmarkdown "libmarkdown.dylib")
+(set 'library (files (or
+	(find true (map file? files))
+	(throw-error "cannot find libmarkdown library"))))
 
 ;; input functions
 
@@ -199,7 +187,7 @@
 ;;
 ;; The function 'compile-markdown-file' uses libc's fopen/fclose calls
 ;; in conjunction with mkd_string / markdown / mkd_cleanup to compile
-;; a string containing markdown into a html output. (abstracting away 
+;; a string containing markdown into a html output. (abstracting away
 ;; from directly dealing with the C library)
 ;;
 ;; @example
@@ -207,7 +195,7 @@
 ;; => nil
 ;;
 (define (compile-markdown-string input-string output-file (flags 0))
-	(letn 
+	(letn
 		((doc (mkd_string input-string (length input-string) flags))
 		(ofp (fopen output-file "w")))
 
@@ -229,12 +217,12 @@
 ;;
 (define (markdown-string input-string (flags 0))
 	(setq markdown-ptr-output (dup "\000" (length input-string)))
-	(letn 
+	(letn
 		((doc (mkd_string input-string (length input-string) flags)))
-		
+
 		(mkd_compile doc flags)
 		(mkd_document doc markdown-ptr-output)
-		(mkd_cleanup doc) 
+		(mkd_cleanup doc)
 		(get-string (utils:address-address markdown-ptr-output))))
 
 ; (exit)
